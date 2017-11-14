@@ -1,7 +1,7 @@
 # MPRC
 Implementation of the model described in the following paper:
 
-- [R^3: Reinforced Ranker-Reader for Open-Domain Question Answering](https://arxiv.org/abs/1512.08849) by Shuohang Wang, Mo Yu, Xiaoxiao Guo, etc..
+- [R^3: Reinforced Ranker-Reader for Open-Domain Question Answering](https://arxiv.org/abs/1709.00023) by Shuohang Wang, Mo Yu, Xiaoxiao Guo, etc..
 
 The Reinforced Ranker-Reader is tested on several open-domain QA datasets: Quasart-T, SearchQA and Triviaqa (unfiltered); The Single Reader is tested on the benchmark data set SQuAD.
 
