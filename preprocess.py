@@ -340,8 +340,6 @@ def prepSearchqaans():
         fpr_a.close()
         fpw.close()
         print(accuracy / all_num)
-
-        print(accuracy2 / all_num)
         print(all_num)
 
     print ('Searchqa reranking preprossing finished!')
@@ -470,7 +468,7 @@ def prepTriviaqa(dataname='unfiltered-web', task='unftriviaqa'):
         #print(real_num)
         #print(all_num)
 
-def prepTriviaqaans(dataname='unfiltered-web', task='unftriviaqa'):
+def prepTriviaqaans(dataname='unfiltered-web', task='unftriviaqaans'):
 
     import sys
     reload(sys)
@@ -781,5 +779,11 @@ if __name__ == "__main__":
         prepTriviaqa('unfiltered-web', "unftriviaqa")
     elif task == "squad":
         prepSQuAD()
+    elif task == 'quasartans':
+        prepQuasartans()
+    elif task == 'searchqaans':
+        prepSearchqaans()
+    elif task == 'unftriviaqaans':
+        prepTriviaqaans()
     else:
         print('the task not supported yet')

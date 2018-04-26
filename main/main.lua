@@ -12,6 +12,7 @@ include '../util/sample.lua'
 
 include '../qa/mlstmReader.lua'
 include '../qa/rankerReader.lua'
+include '../qa/reranker.lua'
 
 include '../models/spanNet.lua'
 include '../models/rankNet.lua'
@@ -83,7 +84,7 @@ print ("Vocal size: "..opt.numWords)
 print('loading data ..')
 local train_dataset = tr:loadData('train', opt.task)
 local test_dataset
-if opt.task ~= 'squad'  then test_dataset = tr:loadData('test', opt.task) end
+if opt.task ~= 'squad' and opt.task ~= 'unftriviaqa' and opt.task ~= 'unftriviaqaans'  then test_dataset = tr:loadData('test', opt.task) end
 local dev_dataset = tr:loadData('dev', opt.task)
 
 torch.manualSeed(opt.seed)
@@ -107,7 +108,7 @@ for i = 1, opt.max_epochs do
     if i == opt.max_epochs then
         model.params:copy( model.best_params )
         recordDev = model:predict_dataset(dev_dataset)
-        if opt.task ~= 'squad' then
+        if opt.task ~= 'squad' and opt.task ~= 'unftriviaqa' and opt.task ~= 'unftriviaqaans' then
             recordTest = model:predict_dataset(test_dataset, 'test')
         end
         model:save('../trainedmodel/', opt, {recordDev, recordTest}, i)
