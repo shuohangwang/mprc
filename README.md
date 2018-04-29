@@ -5,6 +5,8 @@ Implementation of the model described in the following paper:
 
 The Reinforced Ranker-Reader is tested on several open-domain QA datasets: Quasart-T, SearchQA and Triviaqa (unfiltered); The Single Reader is tested on the benchmark data set SQuAD.
 
+- [Evidence Aggregation for Answer Re-Ranking in Open-Domain Question Answering](https://arxiv.org/abs/1711.05116) by Shuohang Wang, Mo Yu, Jing Jiang, etc..
+
 ### Requirements
 - [Torch7](https://github.com/torch/torch7) (with cutorch, cunn, cudnn)
 - Python 2.7
@@ -17,6 +19,7 @@ The Reinforced Ranker-Reader is tested on several open-domain QA datasets: Quasa
 - [SQuAD: Stanford Question Answering Dataset](https://rajpurkar.github.io/SQuAD-explorer/)
 - [GloVe: Global Vectors for Word Representation](http://nlp.stanford.edu/data/glove.840B.300d.zip)
 
+# Reinforced Ranker-Reader for Open-Domain Question Answering
 ### Usage
 ```
 sh preprocess.sh quasart (searchqa/unftriviaqa/squad)
@@ -55,4 +58,30 @@ After installation, run the following codes: (**Note**: the repository path "/PA
 nvidia-docker run -it -v /PATH/mprc:/opt --rm -w /opt      shuohang/mprc:1.0 /bin/bash -c "sh preprocess.sh quasart (searchqa/unftriviaqa/squad)"
 nvidia-docker run -it -v /PATH/mprc:/opt --rm -w /opt/main shuohang/mprc:1.0 /bin/bash -c "th main.lua -task quasart (searchqa/unftriviaqa) -model rankerReader -reward_epoch 12"
 nvidia-docker run -it -v /PATH/mprc:/opt --rm -w /opt/main shuohang/mprc:1.0 /bin/bash -c "th main.lua -task squad -model mlstmReader"
+```
+
+# Evidence Aggregation for Answer Re-Ranking in Open-Domain Question Answering
+### Usage
+```
+sh preprocess.sh quasart (or searchqa)
+cd main
+sh bash_ans.sh quasart (or searchqa) 0
+```
+`bash_ans.sh` will first train the R^3 model. Then the top-K candidate answers for train, dev and test sets are stored in the files, like "trainedmodel/evaluation/quasart/dev_output_top.txt" . All the passages containing the candidate answers are aggregated in the file, like "data/quasartans/sequence/dev.tsv" , with the format:
+```
+question *split_sign* question_id *split_sign* answer\n
+candidate_answer1 *split_sign* normalized_counting_score *split_sign* related_passage1 *split_sign* related_passage2...\n
+candidate_answer2 *split_sign* normalized_counting_score *split_sign* related_passage1 *split_sign* related_passage2...\n
+...
+```
+After aggregrating the passages, `bash_ans.sh` finally runs the reranker.
+### Docker
+You may try to use Docker for running the code.
+- [Nvidia-docker Install](https://github.com/NVIDIA/nvidia-docker)
+- [Image](https://hub.docker.com/r/shuohang/mprc/): docker pull shuohang/mprc:1.0
+
+After installation, run the following codes: (**Note**: the repository path "/PATH/mprc" need to change; a task name "quasart or searchqa" need to specify)
+```
+nvidia-docker run -it -v /PATH/mprc:/opt --rm -w /opt      shuohang/mprc:1.0 /bin/bash -c "sh preprocess.sh quasart"
+nvidia-docker run -it -v /PATH/mprc:/opt --rm -w /opt/main shuohang/mprc:1.0 /bin/bash -c "sh bash_ans.sh quasart 0"
 ```
